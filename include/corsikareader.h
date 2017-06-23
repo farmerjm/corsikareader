@@ -15,6 +15,8 @@ class CorsikaFile {
     CorsikaFile(std::string name, bool _isThinned=1);
     ~CorsikaFile();
     
+
+    const std::vector<CorsikaParticle*>&  GetParticleList() {return ParticleList;}
     void Read();
     
   private:

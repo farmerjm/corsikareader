@@ -78,14 +78,14 @@ void CorsikaFile::Read() {
           y = subBlockBuff[ind+5];
           z = subBlockBuff[ind+6];
 
-          if (isThinned) weight=subBlockBuff[ind+7] 
+          if (isThinned) weight=subBlockBuff[ind+7];
           
           CorsikaParticle* part = new CorsikaParticle(); 
           part->SetDescription(desc);
           part->SetMomentum(px, py, pz);
           part->SetPosition(x, y, z);
           part->SetWeight(weight);
-          //part->Dump();
+          part->Dump();
           ParticleList.push_back(part);
         }
       }

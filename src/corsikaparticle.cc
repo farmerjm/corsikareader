@@ -17,7 +17,7 @@ void CorsikaParticle::SetPosition(double _x, double _y, double _z) {
 }
   
 
-void SetWeight(float _weight) {
+void CorsikaParticle::SetWeight(float _weight) {
 weight=_weight;
 }
 
@@ -32,5 +32,5 @@ void CorsikaParticle::Dump() {
   std::cout << "Momentum:  " << px << " " << py  << " " << pz << std::endl;
   std::cout << "Position: " << x << " " << y << " " << z << std::endl;
   std::cout << "id/gen/obs: " << id << " " << gen << " " << obslev << std::endl;
-  std::cout << "weight: " << weight << endl;
+  std::cout << "weight: " << weight << std::endl;
 }
