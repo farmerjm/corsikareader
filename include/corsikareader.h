@@ -26,8 +26,8 @@ class CorsikaFile {
     
     char* fName;
     
-    static constexpr int blockSize_unthinned=22932;
-    static constexpr int blockSize_thinned=26208;
+    static constexpr int blockSize_unthinned=5733;
+    static constexpr int blockSize_thinned=6552;
     static constexpr int subBlockSize_unthinned=273;
     static constexpr int subBlockSize_thinned=312;
 
