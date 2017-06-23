@@ -15,7 +15,7 @@ class CorsikaFile {
     CorsikaFile(std::string name, bool _isThinned=1);
     ~CorsikaFile();
     
-    std::vector<CorsikaParticle*> Read();
+    void Read();
     
   private:
     bool isThinned;
@@ -30,6 +30,8 @@ class CorsikaFile {
     static constexpr int blockSize_thinned=6552;
     static constexpr int subBlockSize_unthinned=273;
     static constexpr int subBlockSize_thinned=312;
+
+    std::vector<CorsikaParticle*> ParticleList;
 
 };
 

@@ -23,8 +23,7 @@ CorsikaFile::~CorsikaFile() {
 
 
 //ifstream read
-std::vector<CorsikaParticle*> CorsikaFile::Read() {
-  int numPart=0;
+void CorsikaFile::Read() {
   float* blockBuff = new float[blockSize];
   float* subBlockBuff = new float[subBlockSize];
   char* sizeBuff = new char[4];
@@ -62,10 +61,12 @@ std::vector<CorsikaParticle*> CorsikaFile::Read() {
       
       if (isData) {
         for (int j=0; j<39; j++) {
-          int ind=j*7;
+          int ind;
+          if (isThinned) ind=j*8; else ind=j*7;
           float desc;
           float px, py, pz;
           float x,y,z,t;
+          float weight=-1;
 
           desc = subBlockBuff[ind];
           if (desc==0) break;
@@ -76,19 +77,19 @@ std::vector<CorsikaParticle*> CorsikaFile::Read() {
           x = subBlockBuff[ind+4];
           y = subBlockBuff[ind+5];
           z = subBlockBuff[ind+6];
+
+          if (isThinned) weight=subBlockBuff[ind+7] 
           
           CorsikaParticle* part = new CorsikaParticle(); 
           part->SetDescription(desc);
           part->SetMomentum(px, py, pz);
           part->SetPosition(x, y, z);
+          part->SetWeight(weight);
           //part->Dump();
-          numPart++;
+          ParticleList.push_back(part);
         }
       }
-      //std::cout << index << " " <<  subBlockBuff[0] << " " << head << std::endl;
     }
   }
-
-  std::cout << "numPart: " << numPart << std::endl;
 }
   
