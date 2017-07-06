@@ -11,7 +11,7 @@ CorsikaFile::CorsikaFile(std::string name,bool _isThinned) {
     subBlockSize=subBlockSize_unthinned;
   }
 
-  fName=(char*)name.c_str();
+  fName=name;
   numSubBlocks=21;
 
 }
@@ -28,17 +28,17 @@ void CorsikaFile::Read() {
   float* subBlockBuff = new float[subBlockSize];
   char* sizeBuff = new char[4];
 
+  std::cout << "Reading file... " << fName << std::endl;
   std::ifstream fin(fName, std::ios::in | std::ios::binary );
-
-  while(1) {
+  if (!fin.is_open()) std::cerr << "File is not open!" << std::endl;
+  if (!fin) std::cerr << "ERROR OPENING FILE! " << std::endl;
+  if (!fin) std::cerr << "Error:  " << strerror(errno) << std::endl;
+  long c = 0;
+  while(fin) {
     fin.read(sizeBuff, 4);
     fin.read((char*)blockBuff, blockSize*4);
     fin.read(sizeBuff,4);
     if (fin.eof()) break;
-
-    //std::cout << "Reading block:  " << blockSize  << std::endl;
-
-    //for (int i=0; i<blockSize; i++) std::cout << blockBuff[i];
 
     int index=0;
     bool isData;
@@ -46,17 +46,17 @@ void CorsikaFile::Read() {
 
       for (int j=0; j<subBlockSize; j++) {
         subBlockBuff[j]=blockBuff[index+j];
-        index++;
       }
 
+      index=index+subBlockSize;
       std::string head;
+
 
       if (subBlockBuff[0] >= 211284 && subBlockBuff[0] <= 211286) head = "RUNH";
       if (subBlockBuff[0] >= 217432 && subBlockBuff[0] <= 217434) head = "EVTH";
       if (subBlockBuff[0] >= 52814  && subBlockBuff[0] <= 52816) head = "LONG";
       if (subBlockBuff[0] >= 3396   && subBlockBuff[0] <= 3398) head = "EVTE";
       if (subBlockBuff[0] >= 3300   && subBlockBuff[0] <= 3302) head = "RUNE";
-
       if (head.empty()) isData=1;
       
       if (isData) {
@@ -74,19 +74,21 @@ void CorsikaFile::Read() {
           py = subBlockBuff[ind+2];
           pz = subBlockBuff[ind+3];
 
-          x = subBlockBuff[ind+4];
-          y = subBlockBuff[ind+5];
-          z = subBlockBuff[ind+6];
+          x = subBlockBuff[ind+4]/100;
+          y = subBlockBuff[ind+5]/100;
+          z = subBlockBuff[ind+6]/100;
 
           if (isThinned) weight=subBlockBuff[ind+7];
+
           
           CorsikaParticle* part = new CorsikaParticle(); 
           part->SetDescription(desc);
           part->SetMomentum(px, py, pz);
           part->SetPosition(x, y, z);
           part->SetWeight(weight);
-          part->Dump();
           ParticleList.push_back(part);
+          
+          //part->Dump();
         }
       }
     }

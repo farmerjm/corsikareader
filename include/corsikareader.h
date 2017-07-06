@@ -26,7 +26,7 @@ class CorsikaFile {
     int subBlockSize;
     int numSubBlocks;
     
-    char* fName;
+    std::string fName;
     
     static constexpr int blockSize_unthinned=5733;
     static constexpr int blockSize_thinned=6552;
