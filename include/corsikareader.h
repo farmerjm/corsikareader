@@ -23,7 +23,6 @@ class CorsikaFile {
     
   private:
     bool isThinned;
-    bool first;
     
     int blockSize;
     int subBlockSize;
@@ -32,6 +31,15 @@ class CorsikaFile {
     std::string fName;
     
     void NewShower();
+    bool ReadNewBlock();
+    std::string GetSubBlockType();
+    bool ReadDataSubBlock();
+
+    float* blockBuff;
+    float* subBlockBuff;
+    char* sizeBuff;
+    int blockIndex;
+    std::string head;
 
     static constexpr int blockSize_unthinned=5733;
     static constexpr int blockSize_thinned=6552;

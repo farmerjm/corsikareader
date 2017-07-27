@@ -4,8 +4,7 @@
 
 
 int main() {
-  std::cout << "float char: " << sizeof(float) << " " << sizeof(char) << " " << sizeof(double) << std::endl;
-  CorsikaFile theFile("10k1E12", 1);
+  CorsikaFile theFile("DAT_AUGER_NOTHIN", 0);
   int count=0;
   while (theFile.ReadNewShower()) { 
     count++;
