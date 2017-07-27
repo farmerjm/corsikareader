@@ -17,7 +17,6 @@ class CorsikaFile {
     
 
     const std::vector<CorsikaParticle*>&  GetParticleList() {return ParticleList;}
-    void Read();
 
     bool ReadNewShower();
     
@@ -30,7 +29,6 @@ class CorsikaFile {
     
     std::string fName;
     
-    void NewShower();
     bool ReadNewBlock();
     std::string GetSubBlockType();
     bool ReadDataSubBlock();
