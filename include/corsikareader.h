@@ -16,7 +16,7 @@
 //Then, call CorsikaFile::ReadNewShower to get the std::vector<corsikaparticle*>:
 //  auto partlist = file.ReadNewShower();
 //
-//This will populate a vector of particles with id, obslevel, x, y, z, px, py, pz, etc.  You can get vector by then calling:
+//This will populate a vector of corsikaparticle*s with id, obslevel, x, y, z, px, py, pz, etc.  You can get vector by then calling:
 //  file.GetParticleList();
 //
 //
