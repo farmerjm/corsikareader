@@ -18,7 +18,7 @@ void CorsikaParticle::SetPosition(double _x, double _y, double _z) {
   
 
 void CorsikaParticle::SetWeight(float _weight) {
-weight=_weight;
+  weight=_weight;
 }
 
 void CorsikaParticle::SetDescription(float desc) {

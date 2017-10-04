@@ -14,7 +14,6 @@ class CorsikaParticle {
 
     void Dump();
 
-  private:
     int id, gen, obslev;
     double x,y,z;
     double px, py, pz;
