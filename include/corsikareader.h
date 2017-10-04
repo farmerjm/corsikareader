@@ -8,6 +8,26 @@
 #include <cstring>
 #include "corsikaparticle.h"
 
+
+//Basic C++ implementation of a corsika filereader.
+//
+//Usage:  First, instantiate a CorsikaFile object:
+//  CorsikaFile file(fileName, isThinned);
+//Then, call CorsikaFile::ReadNewShower:
+//  file.ReadNewShower();
+//
+//This will populate a vector of particles with id, obslevel, x, y, z, px, py, pz, etc.  You can get vector by then calling:
+//  file.GetParticleList();
+//
+//
+//ReadNewShower will return 1 unless the end of file is reached, so a shower file with multiple showers can be read by doing:
+//
+//while (file.ReadNewShower()) {
+//  auto parts = file.GetParticleList();
+//  for (auto part : parts) { 
+//    //operate on particles
+//  }
+//}
 class CorsikaFile {
     
   public:
@@ -50,10 +70,5 @@ class CorsikaFile {
 
 };
 
-
-/*int CorsikaFile::blockSize_unthinned;
-int CorsikaFile::blockSize_thinned;
-int CorsikaFile::subBlockSize_unthinned;
-int CorsikaFile::subBlockSize_unthinned;*/
 
 #endif
