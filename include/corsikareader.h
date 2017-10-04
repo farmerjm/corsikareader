@@ -13,8 +13,8 @@
 //
 //Usage:  First, instantiate a CorsikaFile object:
 //  CorsikaFile file(fileName, isThinned);
-//Then, call CorsikaFile::ReadNewShower:
-//  file.ReadNewShower();
+//Then, call CorsikaFile::ReadNewShower to get the std::vector<corsikaparticle*>:
+//  auto partlist = file.ReadNewShower();
 //
 //This will populate a vector of particles with id, obslevel, x, y, z, px, py, pz, etc.  You can get vector by then calling:
 //  file.GetParticleList();
@@ -25,7 +25,7 @@
 //while (file.ReadNewShower()) {
 //  auto parts = file.GetParticleList();
 //  for (auto part : parts) { 
-//    //operate on particles
+//    //do something with part->x, etc.
 //  }
 //}
 class CorsikaFile {
