@@ -17,14 +17,15 @@
 //Then, call CorsikaFile::ReadNewShower:
 //  file.ReadNewShower();
 //
-//This will populate a vector of particles with id, obslevel, x, y, z, px, py, pz, etc.  You can get vector by then calling:
-//  file.GetParticleList();
-//
+//This will create a shower object with some shower properties.  Then call:
+// auto shower = theFile.GetShower();
+// auto partlist = shower.GetParticleList();
 //
 //ReadNewShower will return 1 unless the end of file is reached, so a shower file with multiple showers can be read by doing:
 //
 //while (file.ReadNewShower()) {
-//  auto parts = file.GetParticleList();
+//  auto shower = file.GetShower();
+//  auto parts = shower.GetParticleList();
 //  for (auto part : parts) { 
 //    //operate on particles
 //  }
