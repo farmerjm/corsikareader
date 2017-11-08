@@ -53,6 +53,7 @@ class CorsikaFile {
 
     unsigned int showerCount;
     unsigned int blocksRead;
+    unsigned int blockIndex;
     
     std::string fName;
     
@@ -65,7 +66,6 @@ class CorsikaFile {
     float* blockBuff;
     float* subBlockBuff;
     char* sizeBuff;
-    int blockIndex;
     std::string head;
 
     static constexpr int blockSize_unthinned=5733;

@@ -15,6 +15,12 @@ void CorsikaParticle::SetPosition(double _x, double _y, double _z) {
  y=_y;
  z=_z;
 }
+
+bool CorsikaParticle::IsMuonic() {
+  if (id == 75 || id == 76) return true;
+  if (id == 5 || id == 6) return true;
+  return false;
+}
   
 
 void CorsikaParticle::SetWeight(float _weight) {

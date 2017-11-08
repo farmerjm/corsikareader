@@ -16,6 +16,8 @@ class CorsikaParticle {
     void SetDescription(float desc);
     void SetWeight(float _weight);
 
+    bool IsMuonic(); 
+
     void Dump();
 
     int id, gen, obslev;

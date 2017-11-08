@@ -117,7 +117,30 @@ void CorsikaFile::RecoverShowers() {
     //Copy as many blocks as were read in the blocksRead file
     //Copy as many subblocks as can into a block buffer;
     //append a RUNE and fill the rest with zeros
+/*
+  fin.open(fName, std::ios::in | std::ios::binary );
+  ofstream fout(fName+".rec", std::ios::in | std::ios::binary );
+  unsigned int blockIndexRec=0;
+  unsigned int blocksReadRec=0;
+  while(1) {
+    //Copy as many blocks as were read before crashing.
+    if (blocksReadRec < blocksRead) {     //check endpoints here.
+      ReadNewBlock();
+      fout.write(sizeBuff,4);
+      fout.write((char*)blockBuff, blockSize*4);
+      fout.write();
+      continue;
+    }
 
+    //Read as many finished sublocks as exist in the file.
+    fin.read(sizeBuff, 4);
+    fin.read((char*)blockBuff, blockIndex*subBlockSize*4);
+
+    
+
+    }
+  }
+*/
 }
 
 
@@ -127,6 +150,7 @@ bool CorsikaFile::ReadNewShower() {
     if (blockIndex == numSubBlocks) {
       blockIndex=0;
       if (!ReadNewBlock()) {
+        fin.close();
         std::cout << "Blockread failure!" << std::endl;
         if (recoveryMode) RecoverShowers();
         return 0;
