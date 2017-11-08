@@ -1,6 +1,7 @@
 #include "corsikareader.h"
 
-CorsikaFile::CorsikaFile(std::string name,bool _isThinned) {
+CorsikaFile::CorsikaFile(std::string name,bool _isThinned)
+  {
   isThinned=_isThinned;
   
   if (isThinned) {
@@ -23,15 +24,17 @@ CorsikaFile::CorsikaFile(std::string name,bool _isThinned) {
   if (!fin.is_open()) std::cerr << "File is not open!" << std::endl;
   if (!fin) std::cerr << "ERROR OPENING FILE! " << std::endl;
   if (!fin) std::cerr << "Error:  " << strerror(errno) << std::endl;
-
+  
+  showerCount=0;
+  blocksRead=0;
   ReadNewBlock();
 }
 
 
 CorsikaFile::~CorsikaFile() {
-  delete blockBuff;
-  delete subBlockBuff;
-  delete sizeBuff;
+  delete[] blockBuff;
+  delete[] subBlockBuff;
+  delete[] sizeBuff;
 }
 
 
@@ -40,15 +43,15 @@ bool CorsikaFile::ReadNewBlock() {
   fin.read(sizeBuff, 4);
   fin.read((char*)blockBuff, blockSize*4);
   fin.read(sizeBuff,4);
-  if (fin.eof()) {
-    std::cout << "EOF. Particles read:  " << ParticleList.size() << std::endl;
+  if (fin.eof()) { 
+    std::cout << "EOF. Particles read:  " << shower.GetNParticles() << std::endl;
     return 0;
   }
+  blocksRead++;
   return 1;
 }
 
 std::string CorsikaFile::GetSubBlockType() {
-
   if (subBlockBuff[0] >= 211284 && subBlockBuff[0] <= 211286) return "RUNH";
   if (subBlockBuff[0] >= 217432 && subBlockBuff[0] <= 217434) return "EVTH";
   if (subBlockBuff[0] >= 52814  && subBlockBuff[0] <= 52816) return "LONG";
@@ -56,6 +59,22 @@ std::string CorsikaFile::GetSubBlockType() {
   if (subBlockBuff[0] >= 3300   && subBlockBuff[0] <= 3302) return "RUNE";
 
   return "DATA";
+}
+
+
+
+void CorsikaFile::ReadEventHeader() {
+  //Finding a new header means finding a new event, so now we initialize a new shower.
+  double energy=subBlockBuff[3];
+  double zenith=subBlockBuff[10];
+  double azimuth=subBlockBuff[11];
+  double thinLevel=subBlockBuff[148]; //EM thinning;
+
+  shower.energy=energy;
+  shower.zenith=zenith;
+  shower.azimuth=azimuth;
+  shower.thinLevel=thinLevel;
+
 }
 
 bool CorsikaFile::ReadDataSubBlock() {
@@ -86,20 +105,30 @@ bool CorsikaFile::ReadDataSubBlock() {
     part->SetMomentum(px, py, pz);
     part->SetPosition(x, y, z);
     part->SetWeight(weight);
-    ParticleList.push_back(part);
+    shower.AddParticle(part);
   }
   //part->Dump();
   return 1;
 }
 
-bool CorsikaFile::ReadNewShower() {
-  ParticleList.clear();
 
+//WIP
+void CorsikaFile::RecoverShowers() {
+    //Copy as many blocks as were read in the blocksRead file
+    //Copy as many subblocks as can into a block buffer;
+    //append a RUNE and fill the rest with zeros
+
+}
+
+
+bool CorsikaFile::ReadNewShower() {
+  shower.ClearParticles();
   while(1) {
     if (blockIndex == numSubBlocks) {
       blockIndex=0;
       if (!ReadNewBlock()) {
-        std::cout << "Blockread failure." << std::endl;
+        std::cout << "Blockread failure!" << std::endl;
+        if (recoveryMode) RecoverShowers();
         return 0;
       }
     }
@@ -112,9 +141,17 @@ bool CorsikaFile::ReadNewShower() {
     //Read subblock type and determine action
     head = GetSubBlockType();
     if (!head.empty() && (head != "DATA")) std::cout << head << std::endl;
+    if (head == "EVTH") ReadEventHeader();
     if (head == "DATA") ReadDataSubBlock();
-    if (head == "EVTE") break;
+    if (head == "EVTE") {
+      showerCount++; 
+      break;
+    }
+    if (head == "RUNE") {
+      std::cout << "Run end reached." << std::endl;
+      return 0;
+    }
   }
-  std::cout << "Shower break. Particles read:  " << ParticleList.size() << std::endl;
+  std::cout << "Shower break. Particles read:  " << shower.GetNParticles() << std::endl;
   return 1;
 }

@@ -1,3 +1,7 @@
+#ifndef CRPART_H
+#define CRPART_H
+
+
 #include <iostream>
 
 class CorsikaParticle {
@@ -20,3 +24,4 @@ class CorsikaParticle {
     double weight;
 
 };
+#endif

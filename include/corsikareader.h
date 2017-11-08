@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstring>
 #include "corsikaparticle.h"
+#include "crshower.h"
 
 
 //Basic C++ implementation of a corsika filereader.
@@ -35,23 +36,28 @@ class CorsikaFile {
     CorsikaFile(std::string name, bool _isThinned=1);
     ~CorsikaFile();
     
-
-    const std::vector<CorsikaParticle*>&  GetParticleList() {return ParticleList;}
-
+    const CRShower& GetShower() {return shower;}
     bool ReadNewShower();
+    void SetRecoveryMode(bool r) {recoveryMode=r;}
     
   private:
     bool isThinned;
+    bool recoveryMode;
     
     int blockSize;
     int subBlockSize;
     int numSubBlocks;
+
+    unsigned int showerCount;
+    unsigned int blocksRead;
     
     std::string fName;
     
     bool ReadNewBlock();
     std::string GetSubBlockType();
     bool ReadDataSubBlock();
+    void ReadEventHeader();
+    void RecoverShowers();
 
     float* blockBuff;
     float* subBlockBuff;
@@ -66,7 +72,7 @@ class CorsikaFile {
 
     std::ifstream fin;
 
-    std::vector<CorsikaParticle*> ParticleList;
+    CRShower shower;
 
 };
 

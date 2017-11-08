@@ -4,10 +4,12 @@
 
 
 int main() {
-  CorsikaFile theFile("DAT_AUGER_NOTHIN", 0);
+  CorsikaFile theFile("DAT_AUGER_THINE17", 1);
   int count=0;
   while (theFile.ReadNewShower()) { 
-    count++;
+    auto shower = theFile.GetShower();
+    auto partList = shower.GetParticleList();
+    for (auto part: partList) part->Dump();
   }
-  std::cout << "Number of showers read: " << count << std::endl;
+  std::cout << "Done reading." << std::endl;
 }
