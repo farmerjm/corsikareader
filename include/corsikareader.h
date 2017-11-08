@@ -14,12 +14,14 @@
 //
 //Usage:  First, instantiate a CorsikaFile object:
 //  CorsikaFile file(fileName, isThinned);
-//Then, call CorsikaFile::ReadNewShower:
-//  file.ReadNewShower();
+//Then, call CorsikaFile::ReadNewShower to get the std::vector<corsikaparticle*>:
+//  auto partlist = file.ReadNewShower();
 //
 //This will create a shower object with some shower properties.  Then call:
 // auto shower = theFile.GetShower();
 // auto partlist = shower.GetParticleList();
+//
+//Now you have the particle list, containing px, py, pz, x, y, z, and weight for each particle.
 //
 //ReadNewShower will return 1 unless the end of file is reached, so a shower file with multiple showers can be read by doing:
 //
@@ -27,7 +29,7 @@
 //  auto shower = file.GetShower();
 //  auto parts = shower.GetParticleList();
 //  for (auto part : parts) { 
-//    //operate on particles
+//    //do something with part->x, etc.
 //  }
 //}
 class CorsikaFile {
