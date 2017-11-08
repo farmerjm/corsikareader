@@ -1,7 +1,6 @@
 #include "corsikareader.h"
 
-CorsikaFile::CorsikaFile(std::string name,bool _isThinned)
-  {
+CorsikaFile::CorsikaFile(std::string name,bool _isThinned)  {
   isThinned=_isThinned;
   
   if (isThinned) {
