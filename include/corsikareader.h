@@ -54,6 +54,7 @@ class CorsikaFile {
     unsigned int showerCount;
     unsigned int blocksRead;
     unsigned int blockIndex;
+
     
     std::string fName;
     
@@ -62,6 +63,7 @@ class CorsikaFile {
     bool ReadDataSubBlock();
     void ReadEventHeader();
     void RecoverShowers();
+    void ReserveNParticles(unsigned int n) {CRShower::ReserveN=n;}
 
     float* blockBuff;
     float* subBlockBuff;
