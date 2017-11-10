@@ -42,6 +42,7 @@ class CorsikaFile {
     const CRShower& GetShower() {return shower;}
     bool ReadNewShower();
     void SetRecoveryMode(bool r) {recoveryMode=r;}
+    void ReserveNParticles(unsigned int n) {CRShower::ReserveN=n;}
     
   private:
     bool isThinned;
@@ -63,7 +64,6 @@ class CorsikaFile {
     bool ReadDataSubBlock();
     void ReadEventHeader();
     void RecoverShowers();
-    void ReserveNParticles(unsigned int n) {CRShower::ReserveN=n;}
 
     float* blockBuff;
     float* subBlockBuff;
