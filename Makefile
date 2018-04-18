@@ -4,7 +4,7 @@ OBJS=$(patsubst include/%.h, src/%.o, $(wildcard include/*.h))
 LDLIBS = -I include -I common `root-config --glibs
 
 
-CFLAGS  = -g -DLINUX  -g `root-config --cflags` -std=c++11
+CFLAGS  = -g -DLINUX  -g `root-config --cflags` -std=c++11 -march=native -O3
 LDFLAGS = -m32 `root-config --ldflags`
 LDLIBS = -I include -I common `root-config --glibs`
 

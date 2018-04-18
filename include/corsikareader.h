@@ -43,7 +43,11 @@ class CorsikaFile {
     bool ReadNewShower();
     void SetRecoveryMode(bool r) {recoveryMode=r;}
     void ReserveNParticles(unsigned int n) {CRShower::ReserveN=n;}
+
+    static std::vector<std::string> FetchShowers(std::string inFile);
     
+    bool isFailure;
+
   private:
     bool isThinned;
     bool recoveryMode;
@@ -55,6 +59,7 @@ class CorsikaFile {
     unsigned int showerCount;
     unsigned int blocksRead;
     unsigned int blockIndex;
+    unsigned int lastEVTEBlockIndex;
 
     
     std::string fName;

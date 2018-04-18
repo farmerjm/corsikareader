@@ -14,6 +14,7 @@ CorsikaFile::CorsikaFile(std::string name,bool _isThinned)  {
   fName=name;
   numSubBlocks=21;
   blockIndex=0;
+  recoveryMode=1;
 
   blockBuff = new float[blockSize];
   subBlockBuff = new float[subBlockSize];
@@ -26,6 +27,7 @@ CorsikaFile::CorsikaFile(std::string name,bool _isThinned)  {
   
   showerCount=0;
   blocksRead=0;
+  isFailure=0;
   ReadNewBlock();
 }
 
@@ -110,38 +112,51 @@ bool CorsikaFile::ReadDataSubBlock() {
   return 1;
 }
 
-
 //WIP
 void CorsikaFile::RecoverShowers() {
+  std::cout << "Entering recovery mode..." << std::endl;
     //Copy as many blocks as were read in the blocksRead file
     //Copy as many subblocks as can into a block buffer;
     //append a RUNE and fill the rest with zeros
-/*
+
   fin.open(fName, std::ios::in | std::ios::binary );
-  ofstream fout(fName+".rec", std::ios::in | std::ios::binary );
-  unsigned int blockIndexRec=0;
-  unsigned int blocksReadRec=0;
+  std::ofstream fout(fName+".rec", std::ios::binary);
+  unsigned int blocksReadBeforeFailure=blocksRead;
+  blocksRead=0;
   while(1) {
     //Copy as many blocks as were read before crashing.
-    if (blocksReadRec < blocksRead) {     //check endpoints here.
+    if (blocksRead < blocksReadBeforeFailure-1) {     //check endpoints here.
       ReadNewBlock();
       fout.write(sizeBuff,4);
       fout.write((char*)blockBuff, blockSize*4);
-      fout.write();
+      fout.write(sizeBuff,4);
       continue;
     }
 
     //Read as many finished sublocks as exist in the file.
+    for (int i=0; i<blockSize; i++) blockBuff[i]=0;
     fin.read(sizeBuff, 4);
-    fin.read((char*)blockBuff, blockIndex*subBlockSize*4);
+    fin.read((char*)blockBuff, lastEVTEBlockIndex*subBlockSize*4);
+    fin.close();
 
-    
+    fout.write(sizeBuff,4);
+    fout.write((char*)blockBuff, numSubBlocks*subBlockSize*4);
+    fout.write(sizeBuff,4);
 
-    }
+    return;
   }
-*/
 }
 
+std::vector<std::string> CorsikaFile::FetchShowers(std::string inFile) {
+  std::vector<std::string> files;
+  std::ifstream fin(inFile);
+  std::string line;
+  while (std::getline(fin,line)) {
+    size_t index = line.rfind(".", line.length());
+    if (index == std::string::npos) files.push_back(line);
+  }
+  return files;
+}
 
 bool CorsikaFile::ReadNewShower() {
   shower.ClearParticles();
@@ -150,10 +165,12 @@ bool CorsikaFile::ReadNewShower() {
       blockIndex=0;
       if (!ReadNewBlock()) {
         fin.close();
-        std::cout << "Blockread failure!" << std::endl;
-        if (recoveryMode) RecoverShowers();
+        std::cout << "Blockread failure! " << blocksRead << " blocks read" << std::endl;
+        isFailure=1;
+        //if (recoveryMode) RecoverShowers();
         return 0;
       }
+      //std::cout << "Reading new block!" << std::endl;
     }
 
     for (int j=0; j<subBlockSize; j++) {
@@ -163,18 +180,19 @@ bool CorsikaFile::ReadNewShower() {
 
     //Read subblock type and determine action
     head = GetSubBlockType();
-    if (!head.empty() && (head != "DATA")) std::cout << head << std::endl;
+    //if (!head.empty() && (head != "DATA")) std::cout << head << std::endl;
     if (head == "EVTH") ReadEventHeader();
     if (head == "DATA") ReadDataSubBlock();
     if (head == "EVTE") {
       showerCount++; 
-      break;
+      lastEVTEBlockIndex=blockIndex;
+      break; 
     }
     if (head == "RUNE") {
-      std::cout << "Run end reached." << std::endl;
+      std::cout << "Run end reached. " << blocksRead << " blocks read" <<  std::endl;
       return 0;
     }
   }
-  std::cout << "Shower break. Particles read:  " << shower.GetNParticles() << std::endl;
+  //std::cout << "Shower break. Particles read:  " << shower.GetNParticles() << std::endl;
   return 1;
 }
