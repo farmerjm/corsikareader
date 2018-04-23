@@ -6,6 +6,11 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
+#include <dirent.h>
+#include <sys/types.h>
+#include <errno.h>
+
+
 #include "corsikaparticle.h"
 #include "crshower.h"
 
@@ -45,6 +50,7 @@ class CorsikaFile {
     void ReserveNParticles(unsigned int n) {CRShower::ReserveN=n;}
 
     static std::vector<std::string> FetchShowers(std::string inFile);
+    static std::vector<std::string> FetchShowersFromDir(std::string inDir);
     
     bool isFailure;
 

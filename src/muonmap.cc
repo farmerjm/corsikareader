@@ -65,7 +65,7 @@ void MuonMap::AddShower(const CRShower& show) {
 
         const double R = sqrt(x*x+y*y);
         const double particleAz=atan2(y, x);
-        const double relativeAz=azimuth-ParticleAz;
+        const double relativeAz=azimuth-particleAz;
 
         const double correctedR = R/cos(zenith);
         const double correctedX = correctedR*cos(azimuth);

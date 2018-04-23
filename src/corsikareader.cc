@@ -158,6 +158,30 @@ std::vector<std::string> CorsikaFile::FetchShowers(std::string inFile) {
   return files;
 }
 
+std::vector<std::string> CorsikaFile::FetchShowersFromDir(std::string inDir) {
+  std::vector<std::string> files;
+  DIR *dp;
+  struct dirent *dirp;
+  if ((dp=opendir(inDir.c_str()))==NULL) {
+    std::cerr << "ERROR opening dir " << inDir << std::endl;
+  }
+
+  std::string theName;
+  while ((dirp = readdir(dp))!=NULL) {
+    theName=std::string(dirp->d_name);
+    if (theName != "." && theName != "..") {
+      size_t index = theName.rfind(".", theName.length());
+      if (index == std::string::npos) files.push_back(theName);
+    }
+  }
+  closedir(dp);
+  return files;
+}
+
+
+
+
+
 bool CorsikaFile::ReadNewShower() {
   shower.ClearParticles();
   while(1) {
