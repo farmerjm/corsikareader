@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+#include <math.h>
 
 class CorsikaParticle {
 
@@ -12,11 +13,16 @@ class CorsikaParticle {
     ~CorsikaParticle();
 
     void SetMomentum(double _px, double _py, double _pz);
-    void SetPosition(double _x, double _y, double _z);
+    void SetPosition(double _x, double _y);
+    void SetTime(double _t);
     void SetDescription(float desc);
     void SetWeight(float _weight);
 
+    void SetZ(double _z); //for muaddi
+
     bool IsMuonic(); 
+
+    float GetEnergy() {return sqrt(px*px+py*py+pz*pz);}
 
     void Dump();
 
@@ -24,6 +30,7 @@ class CorsikaParticle {
     double x,y,z;
     double px, py, pz;
     double weight;
+    double time;
 
 };
 #endif

@@ -79,33 +79,43 @@ void CorsikaFile::ReadEventHeader() {
 }
 
 bool CorsikaFile::ReadDataSubBlock() {
+  float desc;
+  float px, py, pz;
+  float x,y,z,t;
+
+  bool wasLastAddiMuon=0; 
+  
 
   for (int j=0; j<39; j++) {
     int ind;
     if (isThinned) ind=j*8; else ind=j*7;
-    float desc;
-    float px, py, pz;
-    float x,y,z,t;
     float weight=-1;
 
     desc = subBlockBuff[ind];
     if (desc==0) break;
+    unsigned int id = ((int)desc/1000);
+    if (id==75 || id ==76) {
+      z=subBlockBuff[ind+6];
+      wasLastAddiMuon=1;
+      continue;
+    }
     px = subBlockBuff[ind+1];
     py = subBlockBuff[ind+2];
     pz = subBlockBuff[ind+3];
 
     x = subBlockBuff[ind+4]/100;
     y = subBlockBuff[ind+5]/100;
-    z = subBlockBuff[ind+6]/100;
+    t = subBlockBuff[ind+6];
 
     if (isThinned) weight=subBlockBuff[ind+7];
 
-    
     CorsikaParticle* part = new CorsikaParticle(); 
     part->SetDescription(desc);
     part->SetMomentum(px, py, pz);
-    part->SetPosition(x, y, z);
+    part->SetPosition(x, y);
+    part->SetTime(t);
     part->SetWeight(weight);
+    if (wasLastAddiMuon) part->SetZ(z);
     shower.AddParticle(part);
   }
   //part->Dump();

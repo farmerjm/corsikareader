@@ -10,10 +10,17 @@ void CorsikaParticle::SetMomentum(double _px, double _py, double _pz) {
   pz=_pz;
 }
 
-void CorsikaParticle::SetPosition(double _x, double _y, double _z) {
+void CorsikaParticle::SetPosition(double _x, double _y) {
  x=_x;
  y=_y;
- z=_z;
+}
+
+void CorsikaParticle::SetTime(double _t) {
+  time=_t;
+}
+
+void CorsikaParticle::SetZ(double _z) {
+  z=_z;
 }
 
 bool CorsikaParticle::IsMuonic() {

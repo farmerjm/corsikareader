@@ -11,7 +11,6 @@ MuonMap::MuonMap(std::string name) :
 }
 
 
-
 TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName) {
   MuonMap theMap(outputName);
   auto showerfiles = CorsikaFile::FetchShowersFromDir(inFolder); 
@@ -53,28 +52,11 @@ TH2F MuonMap::MakeMapFromFolders(std::vector<std::string> inFolders, std::string
 
 void MuonMap::AddShower(const CRShower& show) {
   auto particleList=show.GetParticleList();
+  std::cout << "NPart:" << particleList.size() << std::endl;
   for (auto particle : particleList) {
     if (particle->IsMuonic()) {
-      //Note:  this is less trivial than it first appears, because we really have to backpropagae
-      //the muons to the shower transverse plane.
-      if (doShowerTransversePlane) {
-        const double x=particle->x;
-        const double y=particle->y;
-        const double zenith=show.zenith;
-        const double azimuth=show.azimuth;
-
-        const double R = sqrt(x*x+y*y);
-        const double particleAz=atan2(y, x);
-        const double relativeAz=azimuth-particleAz;
-
-        const double correctedR = R/cos(zenith);
-        const double correctedX = correctedR*cos(azimuth);
-        const double correctedY = correctedR*sin(azimuth);
-
-        theMap.Fill(correctedX, correctedY);
-      } else {
         theMap.Fill(particle->x, particle->y);
-      }
+        std::cout << particle->x << " " << particle->y << std::endl;
     }
   }
 }
