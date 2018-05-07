@@ -8,10 +8,11 @@
 
 int main() {
 
-  std::string file = "/data/auger/MidwayCorsikaOut/inclinetest/DAT000002";
+  std::string file = "/data/farmer/inclinetest/DAT000103.inclined";
 
 
   MuonMap theMap("inclinetest");
+  theMap.SetOffset(1800);
   CorsikaFile cf(file);
 
   while (cf.ReadNewShower()) {

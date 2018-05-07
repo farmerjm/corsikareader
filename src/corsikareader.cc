@@ -16,6 +16,8 @@ CorsikaFile::CorsikaFile(std::string name,bool _isThinned)  {
   blockIndex=0;
   recoveryMode=1;
 
+  std::cout << "Opening " << fName << std::endl;
+
   blockBuff = new float[blockSize];
   subBlockBuff = new float[subBlockSize];
   sizeBuff = new char[4];
@@ -70,12 +72,15 @@ void CorsikaFile::ReadEventHeader() {
   double zenith=subBlockBuff[10];
   double azimuth=subBlockBuff[11];
   double thinLevel=subBlockBuff[148]; //EM thinning;
+  double bx = subBlockBuff[70];
+  double bz = subBlockBuff[71];
 
   shower.energy=energy;
   shower.zenith=zenith;
   shower.azimuth=azimuth;
   shower.thinLevel=thinLevel;
-
+  shower.bx=bx;
+  shower.bz=bz;
 }
 
 bool CorsikaFile::ReadDataSubBlock() {
@@ -103,6 +108,8 @@ bool CorsikaFile::ReadDataSubBlock() {
     py = subBlockBuff[ind+2];
     pz = subBlockBuff[ind+3];
 
+    //x = subBlockBuff[ind+4]/100;
+    //y = subBlockBuff[ind+5]/100;
     x = subBlockBuff[ind+4]/100;
     y = subBlockBuff[ind+5]/100;
     t = subBlockBuff[ind+6];

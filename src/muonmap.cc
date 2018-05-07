@@ -2,7 +2,8 @@
 
 MuonMap::MuonMap(std::string name) :
   outputName(name) {
-    theMap = TH2F(name.c_str(), name.c_str(), 250, -1200, 1200, 200, -1200, 1200);
+    isInclined=0;
+    theMap = TH2F(name.c_str(), name.c_str(), 200, -500, 500, 200, -500, 500);
     theMap.GetXaxis()->SetTitle("X [m]");
     theMap.GetYaxis()->SetTitle("Y [m]");
     theMap.SetTitle("Muon Map");
@@ -24,6 +25,14 @@ TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName) {
   }
   theMap.Print(outputName);
   return theMap.theMap;
+}
+
+void MuonMap::CenterOnCore() {
+  auto maxBin = theMap.GetMaximumBin();
+  TH2F centeredMap("centeredmap","centeredmap", 200, -500, 500, 200, -500, 500);
+  centeredMap.GetXaxis()->SetTitle("X [m]");
+  centeredMap.GetYaxis()->SetTitle("Y [m]");
+  centeredMap.SetTitle("Muon Map");
 }
 
 TH2F MuonMap::MakeMapFromFolders(std::vector<std::string> inFolders, std::string outputName) {
@@ -49,14 +58,19 @@ TH2F MuonMap::MakeMapFromFolders(std::vector<std::string> inFolders, std::string
   return theMap.theMap;
 }
 
+void MuonMap::SetInclinedAngle(float angle) {
+  isInclined=1;
+  inclinedAngle=angle/180*3.14159265358979323;
+}
+
 
 void MuonMap::AddShower(const CRShower& show) {
   auto particleList=show.GetParticleList();
   std::cout << "NPart:" << particleList.size() << std::endl;
   for (auto particle : particleList) {
     if (particle->IsMuonic()) {
-        theMap.Fill(particle->x, particle->y);
-        std::cout << particle->x << " " << particle->y << std::endl;
+        theMap.Fill(particle->x+offset, particle->y);
+        //std::cout << particle->x+1400 << " " << particle->y << std::endl;
     }
   }
 }
