@@ -3,6 +3,7 @@
 MuonMap::MuonMap(std::string name) :
   outputName(name) {
     isInclined=0;
+    offset=0;
     theMap = TH2F(name.c_str(), name.c_str(), 200, -500, 500, 200, -500, 500);
     theMap.GetXaxis()->SetTitle("X [m]");
     theMap.GetYaxis()->SetTitle("Y [m]");
@@ -70,7 +71,7 @@ void MuonMap::AddShower(const CRShower& show) {
   for (auto particle : particleList) {
     if (particle->IsMuonic()) {
         theMap.Fill(particle->x+offset, particle->y);
-        //std::cout << particle->x+1400 << " " << particle->y << std::endl;
+        std::cout << particle->x << " " << particle->y << std::endl;
     }
   }
 }

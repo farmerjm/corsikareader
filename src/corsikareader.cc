@@ -74,6 +74,7 @@ void CorsikaFile::ReadEventHeader() {
   double thinLevel=subBlockBuff[148]; //EM thinning;
   double bx = subBlockBuff[70];
   double bz = subBlockBuff[71];
+  double heightFirstInt=subBlockBuff[6];
 
   shower.energy=energy;
   shower.zenith=zenith;
@@ -81,6 +82,7 @@ void CorsikaFile::ReadEventHeader() {
   shower.thinLevel=thinLevel;
   shower.bx=bx;
   shower.bz=bz;
+  shower.heightFirstInteraction=heightFirstInt;
 }
 
 bool CorsikaFile::ReadDataSubBlock() {

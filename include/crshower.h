@@ -19,6 +19,7 @@ struct CRShower {
     double thinLevel;
 
     double bx, bz;
+    double heightFirstInteraction;
 
     const bool IsThinned() const {if (thinLevel != 0) return 1; else return 0;}
     const std::vector<CorsikaParticle*>& GetParticleList() const {return ParticleList;}
