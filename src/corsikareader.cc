@@ -188,7 +188,9 @@ std::vector<std::string> CorsikaFile::FetchShowersFromDir(std::string inDir) {
     theName=std::string(dirp->d_name);
     if (theName != "." && theName != "..") {
       size_t index = theName.rfind(".", theName.length());
-      if (index == std::string::npos) files.push_back(theName);
+      if (index==std::string::npos) continue;
+      if (theName.substr(index,theName.length()) == ".inclined") files.push_back(theName);
+      //if (index == std::string::npos) files.push_back(theName);
     }
   }
   closedir(dp);

@@ -12,16 +12,22 @@ MuonMap::MuonMap(std::string name) :
 }
 
 
-TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName) {
+TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName, double offset) {
   MuonMap theMap(outputName);
+  theMap.SetOffset(offset);
   auto showerfiles = CorsikaFile::FetchShowersFromDir(inFolder); 
 
+  const unsigned int nFilesToRead=114;
+  unsigned int filesRead=0;
+
   for (auto showerfilename : showerfiles) {
+    if (filesRead>=nFilesToRead) break;
     CorsikaFile cFile(inFolder+showerfilename, 1);
     while (cFile.ReadNewShower()) {
       auto shower =cFile.GetShower(); 
       theMap.AddShower(shower);
     }
+    filesRead++;
   }
   theMap.Print(outputName);
   return theMap.theMap;
@@ -69,14 +75,14 @@ void MuonMap::AddShower(const CRShower& show) {
   std::cout << "NPart:" << particleList.size() << std::endl;
   for (auto particle : particleList) {
     if (particle->IsMuonic()) {
-        theMap.Fill(particle->x+offset, particle->y);
+        theMap.Fill(particle->x+offset, particle->y,particle->weight);
         //std::cout << particle->x+1400 << " " << particle->y << std::endl;
     }
   }
 }
 
 void MuonMap::Print(std::string outputName) {
-  TCanvas c1;
+  TCanvas c1("can","can",0,0,800,800);
 
   theMap.Draw("colz");
   c1.SaveAs(outputName.c_str());

@@ -11,9 +11,9 @@ LDLIBS = -I include -I common `root-config --glibs`
 CXX = g++
 
 
-TARGET= read makemap inclinetest muondiff
-PROG = read makemap inclinetest muondiff
-PROGOBJ = read.o makemap.o inclinetest.o muondiff.o
+TARGET= read makemap inclinetest stacktest 
+PROG = read makemap inclinetest stacktest
+PROGOBJ = read.o makemap.o inclinetest.o stacktest.o
 #PROGS=$(patsubst %.cc, %, $(strip $(wildcard src/*.cc)))
 #PROGOBJ=$(patsubst %, %.o, $(PROGS))
 

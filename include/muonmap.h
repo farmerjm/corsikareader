@@ -24,6 +24,6 @@ public:
 
   TH2F* GetMap() {return &theMap;}
   
-  static TH2F MakeMapFromFolder(std::string folderPath, std::string outputName);
+  static TH2F MakeMapFromFolder(std::string folderPath, std::string outputName,double offset=0);
   static TH2F MakeMapFromFolders(std::vector<std::string> folderPath, std::string outputName);
 };
