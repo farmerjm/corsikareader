@@ -1,0 +1,13 @@
+DAT_AUGER_NOTHIN
+src/*.o
+*.png
+include/*.o
+*.o
+read
+makemap
+muondiff
+planephys
+stacktest
+histomuonprodheight
+histoMuons
+inclinetest

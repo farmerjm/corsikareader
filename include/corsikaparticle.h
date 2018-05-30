@@ -6,9 +6,13 @@
 #include <math.h>
 
 class CorsikaParticle {
-
-
   public:
+    double x,y,z;
+    double px, py, pz;
+    double weight;
+    double time;
+    int id, gen, obslev;
+
     CorsikaParticle();
     ~CorsikaParticle();
 
@@ -20,17 +24,13 @@ class CorsikaParticle {
 
     void SetZ(double _z); //for muaddi
 
-    bool IsMuonic(); 
+    bool IsMuonic() const; 
+    bool IsElectromagnetic() const;
 
     float GetEnergy() {return sqrt(px*px+py*py+pz*pz);}
+    //need a getTransverseMomentum function relative to zen, as
 
     void Dump();
-
-    int id, gen, obslev;
-    double x,y,z;
-    double px, py, pz;
-    double weight;
-    double time;
 
 };
 #endif

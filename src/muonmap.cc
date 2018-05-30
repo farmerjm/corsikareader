@@ -1,13 +1,16 @@
 #include "muonmap.h"
 
+bool MuonMap::invertMap;
+
 MuonMap::MuonMap(std::string name) :
   outputName(name) {
     isInclined=0;
     offset=0;
-    theMap = TH2F(name.c_str(), name.c_str(), 200, -500, 500, 200, -500, 500);
+    theMap = TH2F(name.c_str(), name.c_str(), 300, -1000, 1000, 300, -1000, 1000);
     theMap.GetXaxis()->SetTitle("X [m]");
     theMap.GetYaxis()->SetTitle("Y [m]");
-    theMap.SetTitle("Muon Map");
+    if (invertMap) theMap.SetTitle("Electromagnetic Map"); else 
+      theMap.SetTitle("Muon Map");
     gStyle->SetPalette(51);
     gStyle->SetOptStat(0);
 }
@@ -18,7 +21,8 @@ TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName, do
   theMap.SetOffset(offset);
   auto showerfiles = CorsikaFile::FetchShowersFromDir(inFolder); 
 
-  const unsigned int nFilesToRead=114;
+  const unsigned int nFilesToRead=3000;
+  unsigned int showersRead=0;
   unsigned int filesRead=0;
 
   for (auto showerfilename : showerfiles) {
@@ -27,8 +31,16 @@ TH2F MuonMap::MakeMapFromFolder(std::string inFolder, std::string outputName, do
     while (cFile.ReadNewShower()) {
       auto shower =cFile.GetShower(); 
       theMap.AddShower(shower);
+      showersRead++;
     }
     filesRead++;
+  }
+  //std::cout << filesRead << " maps read from " << inFolder << std::endl;
+  auto norm = static_cast<double>(showersRead);
+  for (int i=0; i<300; i++) {
+    for (int j=0; j<300;j++) {
+      theMap.theMap.SetBinContent(i+1,j+1, theMap.theMap.GetBinContent(i+1,j+1)/norm);
+    }
   }
   theMap.Print(outputName);
   return theMap.theMap;
@@ -73,10 +85,13 @@ void MuonMap::SetInclinedAngle(float angle) {
 
 void MuonMap::AddShower(const CRShower& show) {
   auto particleList=show.GetParticleList();
-  std::cout << "NPart:" << particleList.size() << std::endl;
   for (auto particle : particleList) {
-    if (particle->IsMuonic()) {
-        theMap.Fill(particle->x+offset, particle->y,particle->weight);
+    if (!invertMap) {
+      if (particle->IsMuonic()) 
+          theMap.Fill(particle->x*tan(55*3.14159/180)+offset, particle->y,particle->weight);
+    } else if (invertMap) {
+      if (particle->IsElectromagnetic()) 
+          theMap.Fill(particle->x*tan(55*3.14159/180)+offset, particle->y,particle->weight);
     }
   }
 }

@@ -23,10 +23,16 @@ void CorsikaParticle::SetZ(double _z) {
   z=_z;
 }
 
-bool CorsikaParticle::IsMuonic() {
-  if (id == 75 || id == 76) return true;
-  if (id == 5 || id == 6) return true;
+bool CorsikaParticle::IsMuonic() const {
+  if (id == 75 || id == 76) return true;  //MUADDI
+  if (id == 5 || id == 6) return true;   //THis double-counts if muaddi is on
   return false;
+}
+
+bool CorsikaParticle::IsElectromagnetic() const {
+  if (id == 0) return true;  //photons
+  if ((id == 1) || (id == 2)) return true; //e+/e-
+  if (id ==7) return true;    //Pi_0 (-> photon)
 }
   
 

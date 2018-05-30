@@ -12,6 +12,9 @@ private:
   TH2F theMap;
   double offset;
   const std::string outputName;
+
+  static bool invertMap;
+
 public:
   MuonMap(std::string name);
 
@@ -26,4 +29,7 @@ public:
   
   static TH2F MakeMapFromFolder(std::string folderPath, std::string outputName,double offset=0);
   static TH2F MakeMapFromFolders(std::vector<std::string> folderPath, std::string outputName);
+
+  static bool InvertMap(bool flag) {invertMap=flag;}
+  static bool IsInverted() {return invertMap;}
 };

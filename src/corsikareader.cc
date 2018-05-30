@@ -102,7 +102,7 @@ bool CorsikaFile::ReadDataSubBlock() {
     if (desc==0) break;
     unsigned int id = ((int)desc/1000);
     if (id==75 || id ==76) {
-      z=subBlockBuff[ind+6];
+      z=subBlockBuff[ind+6]/100;
       wasLastAddiMuon=1;
       continue;
     }
@@ -190,9 +190,9 @@ std::vector<std::string> CorsikaFile::FetchShowersFromDir(std::string inDir) {
     theName=std::string(dirp->d_name);
     if (theName != "." && theName != "..") {
       size_t index = theName.rfind(".", theName.length());
-      if (index==std::string::npos) continue;
-      if (theName.substr(index,theName.length()) == ".inclined") files.push_back(theName);
-      //if (index == std::string::npos) files.push_back(theName);
+      if (index == std::string::npos) files.push_back(theName);
+      //if (index==std::string::npos) continue;
+      //if (theName.substr(index,theName.length()) == ".inclined") files.push_back(theName);
     }
   }
   closedir(dp);
@@ -226,15 +226,15 @@ bool CorsikaFile::ReadNewShower() {
     //Read subblock type and determine action
     head = GetSubBlockType();
     //if (!head.empty() && (head != "DATA")) std::cout << head << std::endl;
-    if (head == "EVTH") ReadEventHeader();
     if (head == "DATA") ReadDataSubBlock();
+    if (head == "EVTH") ReadEventHeader();
     if (head == "EVTE") {
       showerCount++; 
       lastEVTEBlockIndex=blockIndex;
       break; 
     }
     if (head == "RUNE") {
-      std::cout << "Run end reached. " << blocksRead << " blocks read" <<  std::endl;
+      //std::cout << "Run end reached. " << blocksRead << " blocks read" <<  std::endl;
       return 0;
     }
   }
